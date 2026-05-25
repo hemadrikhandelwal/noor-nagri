@@ -8,7 +8,7 @@ const ProductCard=({product})=>{
             <img
                 src={product.thumbnail}
                 alt={product.title}
-                className="w-1/4 h-48 object-cover rounded-lg"
+                className="w-full  object-cover rounded-lg"
             />
 
             <div className="mt-4">

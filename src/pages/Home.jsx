@@ -35,13 +35,17 @@ export default function Home(){
 
     return(
         <>
-       
-        {
+       <div className="grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
+
+         {
             products.map((product)=>{
                 return <ProductCard key = {product.id} product = {product}/>
 
             })
         }
+
+       </div>
+       
 
            
             
