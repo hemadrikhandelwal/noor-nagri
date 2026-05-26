@@ -9,8 +9,12 @@ const apiClient = axios.create({
     }
 });
 
-const fetchAllProducts =(url,config ={})=>{
+const getAllProducts =(url,config ={})=>{
     return apiClient.get(url,config)
 }
 
-export default fetchAllProducts;
+const getAllProductById = (url,config ={})=>{
+    return apiClient.get(url,config)
+}
+
+export  {getAllProducts,getAllProductById};
