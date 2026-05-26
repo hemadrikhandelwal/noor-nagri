@@ -1,9 +1,14 @@
+import { Link } from 'react-router-dom';
+
 const ProductCard=({product})=>{
-    
+
+  
     
     return (
         <>
-            <div className="border rounded-xl p-4 shadow-md">
+        <Link to={`/product/${product.id}`}>
+
+         <div className="border rounded-xl p-4 shadow-md">
   
             <img
                 src={product.thumbnail}
@@ -20,12 +25,14 @@ const ProductCard=({product})=>{
                 ${product.price}
                 </p>
 
-                <button className="mt-4 w-full bg-black text-white py-2 rounded-lg">
+                <span className="mt-4 w-full bg-black text-white py-2 rounded-lg block text-center" >
                 View Details
-                </button>
+                </span >
             </div>
 
             </div>
+        </Link> 
+           
         </>
     )
 }
