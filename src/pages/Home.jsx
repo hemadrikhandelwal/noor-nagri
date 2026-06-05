@@ -7,6 +7,7 @@ export default function Home(){
     const[isLoading,setLoading] = useState(true);
     const[isError, setError] = useState(null);
     const [searchProductName,setSearch] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('all');
 
     const fetchProducts = async ()=>{
         try{
@@ -21,9 +22,25 @@ export default function Home(){
         }
         }
 
-    const filterProdcuts = products.filter((product) =>
-            product.title.toLowerCase().includes(searchProductName.toLowerCase())
-    );
+    // const searchMatch =  products.filter((product) =>
+    //         product.title.toLowerCase().includes(searchProductName.toLowerCase()));
+
+    // const categoryMatch = products.filter((product)=>{
+    //     product.category === selectedCategory
+    // })
+    // console.log(categoryMatch,searchMatch)
+
+
+
+    const filterProdcuts = products.filter((product) =>{
+        const searchMatch =  product.title.toLowerCase().includes(searchProductName.toLowerCase());
+        const categoryMatch = 
+        selectedCategory === 'all'? true:
+        product.category === selectedCategory;
+        return searchMatch && categoryMatch 
+}) ;  
+    
+    const categories = [...new Set(products.map((product)=> product.category ))];
 
     useEffect(()=>{
             fetchProducts();
@@ -38,22 +55,6 @@ export default function Home(){
             return <p>Something went wrong!</p>;
         }
 
-         
-
-        // if(showSearchUI){
-        //     return  (
-        //         <>
-        //         <div className="grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
-        //         {
-        //             searchedProducts.map((product)=>{
-        //             return <ProductCard key = {product.id} product = {product}/>})
-        //         }
-        //         </div>
-        //         </>
-        //     )
-        
-        
-        // }
 
     return(
         <>
@@ -65,7 +66,14 @@ export default function Home(){
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search Product"
             />
-            {/* <button onClick={searchProduct}>Search</button> */}
+
+            <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+              <option value="all">All Category</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+
 
         </div>
        <div className="grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
@@ -80,21 +88,7 @@ export default function Home(){
             ))
 
         ) }   
-
-         
-
        </div>
-
-       
-
-
-       
-
-           
-            
-        
-        
-        
         </>
     )
 }
