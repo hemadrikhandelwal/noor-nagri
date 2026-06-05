@@ -8,6 +8,7 @@ export default function Home(){
     const[isError, setError] = useState(null);
     const [searchProductName,setSearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [selectSort, setSelectSort] = useState('default');
 
     const fetchProducts = async ()=>{
         try{
@@ -21,6 +22,10 @@ export default function Home(){
             setLoading(false)
         }
         }
+    const sortOptions = [
+  { value: "lowToHigh", label: "Price: Low to High" },
+  { value: "highToLow", label: "Price: High to Low" }
+];
 
 
     const filterProdcuts = products.filter((product) =>{
@@ -30,6 +35,16 @@ export default function Home(){
         product.category === selectedCategory;
         return searchMatch && categoryMatch 
 }) ;  
+
+    const sortedProduct = [...filterProdcuts];
+
+        if(selectSort === 'lowToHigh'){
+             sortedProduct.sort((a,b)=>a.price-b.price)
+        }
+
+        if(selectSort === 'highToLow'){
+                 sortedProduct.sort((a,b)=>b.price-a.price)
+        }
     
     const categories = [...new Set(products.map((product)=> product.category ))];
 
@@ -85,7 +100,7 @@ export default function Home(){
                 
                 {/* Search & Filter Section */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Search Input */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -121,6 +136,24 @@ export default function Home(){
                                 ))}
                             </select>
                         </div>
+
+                        {/* Sort Dropdown */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                SortBy
+                            </label>
+                            <select 
+                                value={selectSort} 
+                                onChange={(e) => setSelectSort(e.target.value)}
+                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all bg-white cursor-pointer"
+                            >
+                                <option value="default">Default</option>
+                                {sortOptions.map((sortOption) => (
+                                    <option key={sortOption.value} value={sortOption.value}>{sortOption.label}</option>
+                                ))}
+                            </select>
+
+                        </div>
                     </div>
 
                     {/* Results Count */}
@@ -144,7 +177,7 @@ export default function Home(){
             </div>
         ):
         (
-            filterProdcuts.map((product)=>(
+            sortedProduct.map((product)=>(
                 <ProductCard key = {product.id} product = {product}/>
 
             ))
