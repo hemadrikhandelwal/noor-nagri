@@ -9,6 +9,7 @@ export default function ProductDetails(){
       const[product,setProduct] = useState({});
       const [isError,setError] = useState(null);
       const[isLoading,setLoading] = useState(true)
+      const [ cart, setCart ] = useState([]);
 
       const fetchSingleProduct = async()=>{
         try{
@@ -23,9 +24,36 @@ export default function ProductDetails(){
         }
       }
 
+      const updateCart = () =>{
+        const existingItem = cart.find((item) =>item.id ===product.id)
+        if(existingItem === undefined){
+          setCart([...cart,{...product,quantity:1}])
+        }
+        else{
+           const updatedCart = cart.map((item) => {
+    if (item.id === product.id) {
+      return {
+        ...item,
+        quantity: item.quantity + 1,
+      };
+    }
+
+    return item;
+  });
+
+  setCart(updatedCart);
+        }
+      }
+
+    
+
       useEffect(()=>{
         fetchSingleProduct();
       },[id])
+
+      useEffect(()=>{
+           console.log(cart,"cart");
+      },[cart])
 
       if(isLoading){
         return <p> Loading.... </p>
@@ -75,7 +103,7 @@ export default function ProductDetails(){
 
       {/* Buttons */}
       <div className="flex flex-wrap gap-4 pt-4">
-        <button className="bg-black text-white px-6 py-3 rounded-lg">
+        <button className="bg-black text-white px-6 py-3 rounded-lg" onClick={(event)=>updateCart(event)}>
           Add to Cart
         </button>
 
@@ -87,8 +115,41 @@ export default function ProductDetails(){
     </div>
   </div>
 </div>
-        
-        
+    <Cart cart = {cart} setCart={setCart}/>
         </>
+
     )
+}
+
+
+
+const Cart =({cart, setCart}) =>{
+
+  const removeItem=(itemId)=>{
+    const updatedCart = cart.map((item)=>{
+      if(item.id === itemId){
+        return {...item, quantity: item.quantity - 1}
+      }
+      return item
+    }).filter((item)=> item.quantity > 0)
+    
+    setCart(updatedCart)
+  }
+
+
+  return (
+    <>
+    {
+      cart.map((item)=>{
+        return(
+          <>
+          <div key={item.id}>{item.title} - {item.quantity}</div>
+          <button  className="bg-black text-white px-6 py-3 rounded-lg" onClick={()=>removeItem(item.id)}>Remove Item</button>
+          </>
+         
+        )
+      })
+    }</>
+  )
+ 
 }
