@@ -178,7 +178,7 @@ export default function Home(){
         ):
         (
             sortedProduct.map((product)=>(
-                <ProductCard key = {product.id} product = {product}/>
+                <ProductCard key = {product.id} {...product}/>
 
             ))
 
